@@ -1,67 +1,44 @@
-require "test/unit"
+require "base_test_case.rb"
 require 'stringio'
 require "element.rb"
 
-class ElementTest < Test::Unit::TestCase
+class ElementTest < BaseTestCase
   
   def test_empty
     element = Element.new("a", "foo")
-    buffer = StringIO.new
-    element.build_to(buffer)
-    puts "#{buffer.string}"
-    assert_equal('<a:foo />', buffer.string)
+    compare("empty", element, '<a:foo />')
   end
   
   def test_only_attributes
     element = Element.new("a", "foo")
     element.add_new_attribute("b", "flavor", "fudge")
-    
-    buffer = StringIO.new
-    element.build_to(buffer)
-    puts "#{buffer.string}"
-    assert_equal('<a:foo b:flavor="fudge" />', buffer.string)
+    compare("only attributes", element, '<a:foo b:flavor="fudge" />')
   end
   
   def test_only_contents
     element = Element.new("a", "foo")
     element.add_content("hi there")
-    
-    buffer = StringIO.new
-    element.build_to(buffer)
-    puts "#{buffer.string}"
-    assert_equal('<a:foo>hi there</a:foo>', buffer.string)
+    compare("only contents", element, '<a:foo>hi there</a:foo>')
   end
   
   def test_only_child_slow_way
     element = Element.new("a", "foo")
     child = Element.new("a", "bar")
     element.add_element(child)
-    
-    buffer = StringIO.new
-    element.build_to(buffer)
-    puts "#{buffer.string}"
-    assert_equal('<a:foo><a:bar /></a:foo>', buffer.string)
+    compare("slow way", element, '<a:foo><a:bar /></a:foo>')
   end
   
   def test_only_child_fast_way
     element = Element.new("a", "foo")
     element.add_new_element("a", "bar")
-    
-    buffer = StringIO.new
-    element.build_to(buffer)
-    puts "#{buffer.string}"
-    assert_equal('<a:foo><a:bar /></a:foo>', buffer.string)
+    compare("fast way", element, '<a:foo><a:bar /></a:foo>')
   end
   
   def test_attributes_and_children_fast_way
     element = Element.new("a", "foo")
     element.add_new_attribute("b", "flavor", "fudge")
     element.add_new_element("a", "bar").add_new_attribute("b", "type", "iron")
-    
-    buffer = StringIO.new
-    element.build_to(buffer)
-    puts "#{buffer.string}"
-    assert_equal('<a:foo b:flavor="fudge"><a:bar b:type="iron" /></a:foo>', buffer.string)
+    compare("attributes and children slow", element, '<a:foo b:flavor="fudge"><a:bar b:type="iron" /></a:foo>')
   end
   
   def test_attributes_and_children_and_content_fast_way
@@ -70,11 +47,7 @@ class ElementTest < Test::Unit::TestCase
     bar = element.add_new_element("a", "bar")
     bar.add_new_attribute("b", "type", "iron")
     bar.add_content("hi there")
-    
-    buffer = StringIO.new
-    element.build_to(buffer)
-    puts "#{buffer.string}"
-    assert_equal('<a:foo b:flavor="fudge"><a:bar b:type="iron">hi there</a:bar></a:foo>', buffer.string)
+    compare("attributes and children and content fast", element, '<a:foo b:flavor="fudge"><a:bar b:type="iron">hi there</a:bar></a:foo>')
   end  
   
   def test_attributes_and_children_slow_way
@@ -83,11 +56,7 @@ class ElementTest < Test::Unit::TestCase
     child = Element.new("a", "bar")
     child.add_new_attribute("b", "type", "iron")
     element.add_element(child)
-    
-    buffer = StringIO.new
-    element.build_to(buffer)
-    puts "#{buffer.string}"
-    assert_equal('<a:foo b:flavor="fudge"><a:bar b:type="iron" /></a:foo>', buffer.string)
+    compare("attributes and children slow", element, '<a:foo b:flavor="fudge"><a:bar b:type="iron" /></a:foo>')
   end
   
   def test_attributes_and_children_iteration
@@ -101,12 +70,14 @@ class ElementTest < Test::Unit::TestCase
     child2.add_new_attribute("b", "type", "iron")
     element.add_element(child2)
     
-    letters = ""
-    element.each_child do |child|
-      letters = letters + child.namespace+child.name
-    end
+    expected = <<HERE
+<a:foo b:flavor="fudge">
+  <a:bar b:type="iron" />
+  <c:bar b:type="iron" />
+</a:foo>
+HERE
     
-    assert_equal("abarcbar", letters)
+    compare("deep", element, expected)
   end
 
 end

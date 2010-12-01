@@ -1,15 +1,14 @@
 class Property
-  def initialize(namespace, name, attribute, global)
-    @namespace = namespace
-    @name = name
-    @attribute = attribute
+  def initialize(target, property_element, global)
+    @target = target
+    @property_element = property_element
     @global = global
     @consumed = false
   end
   
   def inject(element)
     if match?(element) && !@consumed
-      element.add_attribute(@attribute)
+      element.add_element(@property_element)
       @consumed = true unless @global      
     end
     
@@ -23,7 +22,7 @@ class Property
   
   private
   def match?(element)
-    element.namespace == @namespace && element.name == @name 
+    element.namespace == @target.namespace && element.name == @target.name 
   end
   
 end

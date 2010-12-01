@@ -1,50 +1,42 @@
-require "test/unit"
-require 'stringio'
+require "base_test_case.rb"
 require "property.rb"
 require "element.rb"
 
-class PropertyTest < Test::Unit::TestCase
+class PropertyTest < BaseTestCase
   
   #TODO: add regular expressions
   #TODO: breadth first?
   
   def setup
     create_nodes
-    @attribute = Attribute.new("t", "rank", "first")
+    @marker = Element.new("t", "marker")
   end
   
   def test_simple_match        
-    property = Property.new("a", "house", @attribute, false)    
+    property = Property.new(Element.new("a", "house"), @marker, false)    
     property.inject(@house)    
-    compare("simple match", @house, '<a:house t:rank="first"><b:dog><c:rex /><c:max /><c:spot /></b:dog><b:cat><c:fluffy /><c:tiger /><c:socks /></b:cat><b:people><c:joe /><c:jane /></b:people></a:house>')    
+    compare("simple match", @house, '<a:house><b:dog><c:rex /><c:max /><c:spot /></b:dog><b:cat><c:fluffy /><c:tiger /><c:socks /></b:cat><b:people><c:joe /><c:jane /></b:people><t:marker /></a:house>')    
   end
   
   def test_deep_match_left
-    property = Property.new("c", "rex", @attribute, false)    
+    property = Property.new(Element.new("c", "rex"), @marker, false)    
     property.inject(@house)    
-    compare("deep left", @house, '<a:house><b:dog><c:rex t:rank="first" /><c:max /><c:spot /></b:dog><b:cat><c:fluffy /><c:tiger /><c:socks /></b:cat><b:people><c:joe /><c:jane /></b:people></a:house>')
+    compare("deep left", @house, '<a:house><b:dog><c:rex><t:marker /></c:rex><c:max /><c:spot /></b:dog><b:cat><c:fluffy /><c:tiger /><c:socks /></b:cat><b:people><c:joe /><c:jane /></b:people></a:house>')
   end
   
   def test_only_first
-    property = Property.new("a", "bar", @attribute, false)    
+    property = Property.new(Element.new("a", "bar"), @marker, false)    
     property.inject(@foo)
-    compare("only first", @foo, '<a:foo><a:fee><a:bar t:rank="first"><a:bar /></a:bar></a:fee></a:foo>')
+    compare("only first", @foo, '<a:foo><a:fee><a:bar><a:bar /><t:marker /></a:bar></a:fee></a:foo>')
   end
   
   def test_global
-    property = Property.new("a", "bar", @attribute, true)    
+    property = Property.new(Element.new("a", "bar"), @marker, true)
     property.inject(@foo)
-    compare("global", @foo, '<a:foo><a:fee><a:bar t:rank="first"><a:bar t:rank="first" /></a:bar></a:fee></a:foo>')
+    compare("global", @foo, '<a:foo><a:fee><a:bar><a:bar><t:marker /></a:bar><t:marker /></a:bar></a:fee></a:foo>')
   end
   
   private
-  
-  def compare(name, root_element, expected)
-    buffer = StringIO.new
-    root_element.build_to(buffer)
-    puts "#{name}: |#{buffer.string}|"
-    assert_equal(expected, buffer.string)
-  end
   
   def create_nodes
     @house = Element.new("a", "house")
