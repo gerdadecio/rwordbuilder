@@ -1,5 +1,9 @@
 require "element.rb"
 
+# The Paragraph class represents a WordML paragraph element.
+# It is worth noting that Paragraph contains elements, but is not a subtype of Element.
+#
+# see ParagraphTest
 class Paragraph
   
   def initialize(text)

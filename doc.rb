@@ -1,6 +1,7 @@
 require 'stringio'
 require 'element.rb'
 
+# The Doc class represents a WordML document
 class Doc
   
   PRINT_VIEW = 'print'

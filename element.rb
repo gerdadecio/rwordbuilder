@@ -1,5 +1,9 @@
 require "attribute.rb"
 
+# The Element class represents a XML element that can contain other elements as well as being decorated with
+# a namespace and attributes.
+# 
+# see #ElementTest
 class Element
   attr_reader :namespace, :name
   
