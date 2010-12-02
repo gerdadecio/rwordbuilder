@@ -1,3 +1,6 @@
+#The Attribute class represents a XML attribute and can be added to an #Element.
+#
+# see #AttributeTest
 class Attribute
   def initialize(namespace, name, value)
     @namespace = namespace
