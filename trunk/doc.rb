@@ -3,6 +3,8 @@ require 'element.rb'
 
 # The Doc class represents a WordML document
 class Doc
+
+  #TODO verify type of paragraph
   
   PRINT_VIEW = 'print'
   ARIAL = 'arial'
@@ -15,11 +17,15 @@ class Doc
     @doc_properties.add_new_element("w", "view").add_new_attribute("w", "val", view_type)
   end
   
-  def add_paragraph(content)
+  def add_new_paragraph(content)
     paragraph = @body.add_new_element("w", "p")
     run = paragraph.add_new_element("w", "r")
     text = run.add_new_element("w", "t")
     text.add_content(content)
+  end
+  
+  def add_paragraph(paragraph_element)
+    @body.add_element(paragraph_element)
   end
   
   def build_to(buffer)
