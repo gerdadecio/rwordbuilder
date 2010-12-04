@@ -68,5 +68,11 @@ class Element
     end
   end
   
+  def self.new_with_attribute(namespace, name, attribute_namespace, attribute_name, attribute_value)
+    new_element = Element.new(namespace, name)
+    new_element.add_new_attribute(attribute_namespace, attribute_name, attribute_value)
+    return new_element
+  end
+  
   
 end

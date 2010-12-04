@@ -15,6 +15,11 @@ class ElementTest < BaseTestCase
     compare("only attributes", element, '<a:foo b:flavor="fudge" />')
   end
   
+  def test_only_attribute_fast
+    element = Element.new_with_attribute("a", "foo", "b", "flavor", "fudge")
+    compare("only attributes fast", element, '<a:foo b:flavor="fudge" />')
+  end
+  
   def test_only_contents
     element = Element.new("a", "foo")
     element.add_content("hi there")
