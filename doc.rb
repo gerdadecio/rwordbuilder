@@ -1,20 +1,28 @@
 require 'stringio'
 require 'element.rb'
+require "property_injector.rb"
 
 # The Doc class represents a WordML document
 class Doc
 
   #TODO verify type of paragraph
+  #TODO convenience methods with properties
+  #TODO current section, current paragraph...
+  #TODO unit test
   
-  PRINT_VIEW = 'print'
-  ARIAL = 'arial'
+  @@doc_pr = Element.new("w", "docPr")  # document properties
   
-  def initialize
+  VIEW_PRINT = PropertyInjector.new(@@doc_pr, Element.new_with_attribute("w", "view", "w", "val", "print"), false)
+  VIEW_WEB = PropertyInjector.new(@@doc_pr, Element.new_with_attribute("w", "view", "w", "val", "web"), false)
+  VIEW_NORMAL = PropertyInjector.new(@@doc_pr, Element.new_with_attribute("w", "view", "w", "val", "normal"), false)
+  VIEW_OUTLINE = PropertyInjector.new(@@doc_pr, Element.new_with_attribute("w", "view", "w", "val", "outline"), false)
+  
+  def initialize(*property_injectors)
     build_root
-  end
-  
-  def view=(view_type)
-    @doc_properties.add_new_element("w", "view").add_new_attribute("w", "val", view_type)
+    
+    property_injectors.each do |injector|
+      injector.inject(@root)
+    end
   end
   
   def add_new_paragraph(content)

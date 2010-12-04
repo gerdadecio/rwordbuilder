@@ -6,11 +6,16 @@ require "property_injector.rb"
 #
 # see ParagraphTest
 class Paragraph
-  @@p_pr = Element.new("w", "pPr")
-  @@center_injectable = Element.new("w", "jc")
-  @@center_injectable.add_new_attribute("w", "val", "center")
+  @@p_pr = Element.new("w", "pPr")  # paragraph properties
+  @@r_pr = Element.new("w", "rPr")  # run properties
   
-  CENTER = PropertyInjector.new(@@p_pr, @@center_injectable, true)
+  LEFT = PropertyInjector.new(@@p_pr, Element.new_with_attribute("w", "jc", "w", "val", "left"), true)
+  CENTER = PropertyInjector.new(@@p_pr, Element.new_with_attribute("w", "jc", "w", "val", "center"), true)
+  RIGHT = PropertyInjector.new(@@p_pr, Element.new_with_attribute("w", "jc", "w", "val", "right"), true)
+  
+  BOLD = PropertyInjector.new(@@r_pr, Element.new_with_attribute("w", "b", "w", "val", "on"), true)
+  ITALIC = PropertyInjector.new(@@r_pr, Element.new_with_attribute("w", "i", "w", "val", "on"), true)
+  UNDERLINE = PropertyInjector.new(@@r_pr, Element.new_with_attribute("w", "u", "w", "val", "single"), true)
   
   def initialize(text, *property_injectors)
     @p_element = Element.new("w", "p")
