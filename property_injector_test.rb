@@ -4,9 +4,6 @@ require "element.rb"
 
 class PropertyInjectorTest < BaseTestCase
   
-  #TODO: add regular expressions
-  #TODO: breadth first?
-  
   def setup
     create_nodes
     @marker = Element.new("t", "marker")
@@ -16,6 +13,13 @@ class PropertyInjectorTest < BaseTestCase
     property_injector = PropertyInjector.new(Element.new("a", "house"), @marker, false)    
     property_injector.inject(@house)    
     compare("simple match", @house, '<a:house><b:dog><c:rex /><c:max /><c:spot /></b:dog><b:cat><c:fluffy /><c:tiger /><c:socks /></b:cat><b:people><c:joe /><c:jane /></b:people><t:marker /></a:house>')    
+  end
+  
+  def test_can_reuse_injector      
+    property_injector = PropertyInjector.new(Element.new("a", "house"), @marker, false)    
+    property_injector.inject(@house)
+    property_injector.inject(@house)  #reuse it
+    compare("can reuse", @house, '<a:house><b:dog><c:rex /><c:max /><c:spot /></b:dog><b:cat><c:fluffy /><c:tiger /><c:socks /></b:cat><b:people><c:joe /><c:jane /></b:people><t:marker /><t:marker /></a:house>')    
   end
   
   def test_deep_match_left

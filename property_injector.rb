@@ -7,6 +7,7 @@ class PropertyInjector
   end
   
   def inject(element)
+    @consumed = false
     if match?(element) && !@consumed
       element.add_element(@injected_element)
       @consumed = true unless @global      

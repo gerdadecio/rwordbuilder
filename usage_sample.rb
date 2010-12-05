@@ -5,8 +5,14 @@ buffer = StringIO.new
 doc = Doc.new(Doc::VIEW_PRINT)
 doc.add_new_paragraph("Hello World")
 
-doc.add_paragraph(Paragraph.new("hi left", Paragraph::LEFT))
-doc.add_paragraph(Paragraph.new("hi centered", Paragraph::CENTER))
+# easy, but less control
+doc.add_new_paragraph("hi left", Paragraph::LEFT)
+
+#TODO do we need pass of paragraph? Or should add_new return what it added?
+# explicit constructor and more control
+my_paragraph = Paragraph.new("hi centered", Paragraph::CENTER)
+my_paragraph.add_run(" with some bold and underlined text", Paragraph::BOLD, Paragraph::UNDERLINE)
+doc.add_paragraph(my_paragraph)
 doc.add_paragraph(Paragraph.new("hi right", Paragraph::RIGHT, Paragraph::BOLD, Paragraph::ITALIC, Paragraph::UNDERLINE))
 
 doc.build_to(buffer)

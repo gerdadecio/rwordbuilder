@@ -54,6 +54,32 @@ HERE
   compare("complicated paragraph", paragraph, expected)
   
   end
+
+  def test_mixed_runs
+    expected = <<HERE
+<w:p>
+ <w:pPr>
+  <w:jc w:val="right" />
+ </w:pPr>
+  <w:r>
+    <w:rPr>
+      <w:b w:val="on" />
+    </w:rPr>
+    <w:t>Some bold</w:t>
+  </w:r>
+  <w:r>
+    <w:rPr>
+      <w:u w:val="single" />
+    </w:rPr>
+    <w:t>Some underlined</w:t>
+  </w:r>
+</w:p>
+HERE
+    paragraph = Paragraph.new(nil, Paragraph::RIGHT)
+    paragraph.add_run("Some bold", Paragraph::BOLD)
+    paragraph.add_run("Some underlined", Paragraph::UNDERLINE)
+    compare("mixed runs", paragraph, expected)
+  end
   
   
   
