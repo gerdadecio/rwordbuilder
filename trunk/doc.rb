@@ -63,6 +63,7 @@ HERE
     @root.add_new_attribute("xmlns", "wxml", "http://www.w3.org/XML/1998/namespace") 
     @root.add_new_attribute("xmlns", "xsi", "http://www.w3.org/2001/XMLSchema-instance") 
     @root.add_new_attribute("xsi", "schemaLocation", "http://schemas.microsoft.com/office/word/2003/wordml wordnet.xsd")
+    @root.add_new_attribute("xml", "space", "preserve")
     
     
     @doc_properties = @root.add_new_element("w", "docPr")
