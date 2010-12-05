@@ -20,13 +20,30 @@ class Paragraph
   def initialize(text, *property_injectors)
     @p_element = Element.new("w", "p")
     @p_element.add_new_element("w", "pPr")
-    @run_element = @p_element.add_new_element("w", "r")
-    @run_element.add_new_element("w", "rPr")
-    @run_element.add_new_element("w", "t").add_content(text)
+    
+    if (text)
+      run_element = @p_element.add_new_element("w", "r")
+      run_element.add_new_element("w", "rPr")
+      run_element.add_new_element("w", "t").add_content(text)      
+    end
     
     property_injectors.each do |injector|
       injector.inject(@p_element)
     end
+  end
+  
+  def add_run(text, *property_injectors)
+    run_element = @p_element.add_new_element("w", "r")
+    run_element.add_new_element("w", "rPr")
+    run_element.add_new_element("w", "t").add_content(text)
+    
+    property_injectors.each do |injector|
+      injector.inject(run_element)
+    end
+  end
+  
+  def root_element
+    return @p_element
   end
   
   def build_to(buffer)  

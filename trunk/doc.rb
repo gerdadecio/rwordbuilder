@@ -5,8 +5,6 @@ require "property_injector.rb"
 # The Doc class represents a WordML document
 class Doc
 
-  #TODO verify type of paragraph
-  #TODO convenience methods with properties
   #TODO current section, current paragraph...
   #TODO unit test
   
@@ -25,15 +23,18 @@ class Doc
     end
   end
   
-  def add_new_paragraph(content)
-    paragraph = @body.add_new_element("w", "p")
-    run = paragraph.add_new_element("w", "r")
-    text = run.add_new_element("w", "t")
-    text.add_content(content)
+  def add_new_paragraph(content, *properties)
+    if properties.empty?
+      paragraph = Paragraph.new(content)
+    else
+      paragraph = Paragraph.new(content, properties[0])
+    end
+    
+    @body.add_element(paragraph.root_element)
   end
   
-  def add_paragraph(paragraph_element)
-    @body.add_element(paragraph_element)
+  def add_paragraph(paragraph)
+    @body.add_element(paragraph.root_element)
   end
   
   def build_to(buffer)
