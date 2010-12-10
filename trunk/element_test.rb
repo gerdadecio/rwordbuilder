@@ -84,5 +84,20 @@ HERE
     
     compare("deep", element, expected)
   end
+  
+  def test_add_new_element_before
+    element = Element.new("a", "root")
+    second = element.add_new_element("a", "second")
+    element.add_new_element_before("a", "first", second)
+    
+    expected = <<HERE
+<a:root>
+  <a:first />
+  <a:second />
+</a:root>
+HERE
+
+    compare("add element before", element, expected)
+  end
 
 end
