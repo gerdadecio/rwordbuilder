@@ -29,12 +29,27 @@ class Element
   
   def add_new_element(namespace, name)
     element = Element.new(namespace, name)
-    @child_elements << element
+    add_element(element)
     return element
   end
   
   def add_element(element)
     @child_elements << element
+  end
+  
+  def add_new_element_before(namespace, name, other_element)
+    element = Element.new(namespace, name)
+    add_element_before(element, other_element)
+    return element
+  end
+  
+  
+  def add_element_before(element, other_element)
+    index = 0
+    if (@child_elements.index(other_element))
+      index = @child_elements.index(other_element)
+    end
+  @child_elements.insert(index, element)
   end
   
   def build_to(buffer)

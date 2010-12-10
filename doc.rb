@@ -5,7 +5,7 @@ require "property_injector.rb"
 # The Doc class represents a WordML document
 class Doc
 
-  #TODO current section, current paragraph...
+  #TODO current section, add paragraph goes to current section, new section,...
   #TODO unit test
   
   @@doc_pr = Element.new("w", "docPr")  # document properties
@@ -35,6 +35,10 @@ class Doc
   
   def add_paragraph(paragraph)
     @body.add_element(paragraph.root_element)
+  end
+  
+  def add_table(table)
+    @body.add_element(table.root_element)
   end
   
   def build_to(buffer)
